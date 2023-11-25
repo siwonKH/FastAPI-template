@@ -70,11 +70,15 @@ async def create_database() -> None:
             )
         )
 
+    await engine.dispose()
+
 async def drop_database() -> None:
     """Drop current database."""
     engine = create_async_engine(str(settings.db_url.with_path("/mysql")))
     async with engine.connect() as conn:
         await conn.execute(text(f'DROP DATABASE {settings.db_base};'))
+
+    await engine.dispose()
 {%- endif %}
 {%- if cookiecutter.db_info.name == "sqlite" %}
 async def create_database() -> None:
